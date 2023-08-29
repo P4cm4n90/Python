@@ -5,3 +5,5 @@
 - s4ndw0rm_foothold_poc.py - python exloit to gain foothold on one of the htb machines.
 
 - pry1ng3y35_poc.py - full exploit for one of the htb challenges.
+
+- ovidentia_sqlinj.py - python script written for solving one of the oscp labs.
